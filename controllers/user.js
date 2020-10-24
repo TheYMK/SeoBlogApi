@@ -63,13 +63,20 @@ exports.update = (req, res) => {
 		}
 
 		let user = req.profile;
-		user = _.extend(user, fields);
+		// user's existing role and email before update
+		let existingRole = user.role;
+		let existingEmail = user.email;
+		// user = _.extend(user, fields);
 
 		if (fields.password && fields.password.length < 6) {
 			return res.status(400).json({
 				error: 'Password should be min 6 characters long'
 			});
 		}
+		user = _.extend(user, fields);
+		// user's existing role and email - dont update - keep it same
+		user.role = existingRole;
+		user.email = existingEmail;
 
 		if (files.photo) {
 			if (files.photo.size > 1000000) {
